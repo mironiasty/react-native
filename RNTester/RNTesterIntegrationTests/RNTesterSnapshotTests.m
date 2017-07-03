@@ -47,7 +47,7 @@ RCT_TEST(TextExample)
 RCT_TEST(SwitchExample)
 RCT_TEST(SliderExample)
 // TabBarExample on tvOS passes locally but not on Travis
-// RCT_TEST(TabBarExample) // Current broken in Travis CI
+RCT_TEST(TabBarExample)
 #endif
 
 - (void)testZZZNotInRecordMode
