@@ -93,7 +93,7 @@ const linkDependencyWindows = (windowsProject, dependency) => {
   });
 };
 
-const linkDependencyIOS = (iOSProject, dependency) => {
+const linkDependencyIOS = (iOSProject, dependency, usePods) => {
   if (!iOSProject || !dependency.config.ios) {
     return;
   }
@@ -105,7 +105,7 @@ const linkDependencyIOS = (iOSProject, dependency) => {
   }
 
   log.info(`Linking ${dependency.name} ios dependency`);
-  if (iOSProject.podfile) {
+  if (iOSProject.podfile && usePods) {
     registerDependencyPods(dependency, iOSProject);
   }
   else {
@@ -135,11 +135,12 @@ const linkAssets = (project, assets) => {
 /**
  * Updates project and links all dependencies to it.
  *
- * @param args If optional argument [packageName] is provided,
+ * @param argv If optional argument [packageName] is provided,
  *             only that package is processed.
  * @param config CLI config, see local-cli/core/index.js
+ * @param args options
  */
-function link(args: Array<string>, config: RNConfig) {
+function link(argv: Array<string>, config: RNConfig, args) {
   var project;
   try {
     project = config.getProjectConfig();
@@ -151,7 +152,7 @@ function link(args: Array<string>, config: RNConfig) {
     return Promise.reject(err);
   }
  
-  let packageName = args[0];
+  let packageName = argv[0];
   // Check if install package by specific version (eg. package@latest)
   if (packageName !== undefined) {
     packageName = packageName.split('@')[0];
@@ -170,7 +171,7 @@ function link(args: Array<string>, config: RNConfig) {
   const tasks = flatten(dependencies.map(dependency => [
     () => promisify(dependency.config.commands.prelink || commandStub),
     () => linkDependencyAndroid(project.android, dependency),
-    () => linkDependencyIOS(project.ios, dependency),
+    () => linkDependencyIOS(project.ios, dependency, args.pod),
     () => linkDependencyWindows(project.windows, dependency),
     () => promisify(dependency.config.commands.postlink || commandStub),
   ]));
@@ -190,4 +191,8 @@ module.exports = {
   func: link,
   description: 'links all native dependencies (updates native build files)',
   name: 'link [packageName]',
+  options: [{
+    command: '--no-pod',
+    description: 'Do not add library as pod, even if iOS project has Podfile',
+  }]
 };
