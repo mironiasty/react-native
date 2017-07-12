@@ -1,0 +1,13 @@
+Pod::Spec.new do |s|
+  s.name         =  '__NAME__'
+  s.version      =  '__VERSION__'
+  s.license      =  '__LICENSE__'
+  s.homepage     =  '__HOMEPAGE__'
+  s.author       =  '__AUTHOR__'
+  s.source       =  { :git => '__GITSOURCE__' }
+  s.summary      =  '__SUMMARY__'
+
+  s.platform = :ios, "8.0"
+  s.source_files = "__BASEDIR__/**/*.{m,h}"
+  s.dependency 'React'
+end

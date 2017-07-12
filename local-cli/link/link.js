@@ -105,7 +105,7 @@ const linkDependencyIOS = (iOSProject, dependency) => {
   }
 
   log.info(`Linking ${dependency.name} ios dependency`);
-  if (iOSProject.podfile && dependency.config.ios.podspec) {
+  if (iOSProject.podfile) {
     registerDependencyPods(dependency, iOSProject);
   }
   else {
