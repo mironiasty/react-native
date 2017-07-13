@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const removePodEntry = require('./removePodEntry');
 
 /**
@@ -12,4 +13,9 @@ module.exports = function unregisterNativeModule(dependencyConfig, iOSProject) {
   const removed = removePodEntry(podContent, dependencyConfig.podspec);
   fs.writeFileSync(iOSProject.podfile, removed);
 
+  // remove generated podspec file, if exists
+  const generatedPodspec = path.join(iOSProject.sourceDir, dependencyConfig.podspec + '.podspec');
+  if (fs.existsSync(generatedPodspec)) {
+    fs.unlinkSync(generatedPodspec)
+  }
 };

@@ -40,6 +40,15 @@ describe('ios::findPodspecName', () => {
     expect(findPodspecName('user/packet')).toBe('Another');
   });
 
+  it('returns name of podspec generated in ios directory', () => {
+    mockFS({
+      ios: {
+        'generated.podspec': 'empty',
+      }
+    });
+    expect(findPodspecName('node_module/generated')).toBe('generated');
+  });
+
   afterEach(() => {
     mockFS.restore();
   });
