@@ -9,16 +9,23 @@
 
 #import <UIKit/UIKit.h>
 
-#import <RCTText/RCTBackedTextInputViewProtocol.h>
 #import <React/RCTView.h>
+
+#import "RCTBackedTextInputViewProtocol.h"
+#import "RCTFontAttributes.h"
+#import "RCTFontAttributesDelegate.h"
 
 @class RCTBridge;
 @class RCTEventDispatcher;
+@class RCTTextSelection;
 
-@interface RCTTextInput : RCTView {
+@interface RCTTextInput : RCTView <RCTFontAttributesDelegate> {
 @protected
   RCTBridge *_bridge;
   RCTEventDispatcher *_eventDispatcher;
+  NSInteger _nativeEventCount;
+  NSInteger _mostRecentEventCount;
+  BOOL _blurOnSubmit;
 }
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
@@ -34,7 +41,28 @@
 @property (nonatomic, assign, readonly) CGSize contentSize;
 
 @property (nonatomic, copy) RCTDirectEventBlock onContentSizeChange;
+@property (nonatomic, copy) RCTDirectEventBlock onSelectionChange;
+
+@property (nonatomic, readonly, strong) RCTFontAttributes *fontAttributes;
+
+@property (nonatomic, assign) NSInteger mostRecentEventCount;
+@property (nonatomic, assign) BOOL blurOnSubmit;
+@property (nonatomic, assign) BOOL selectTextOnFocus;
+@property (nonatomic, assign) BOOL clearTextOnFocus;
+@property (nonatomic, copy) RCTTextSelection *selection;
+
+- (void)setFont:(UIFont *)font;
 
 - (void)invalidateContentSize;
+
+// Temporary exposure of particial `RCTBackedTextInputDelegate` support.
+// In the future all methods of the protocol should move to this class.
+- (BOOL)textInputShouldBeginEditing;
+- (void)textInputDidBeginEditing;
+- (BOOL)textInputShouldReturn;
+- (void)textInputDidReturn;
+- (void)textInputDidChangeSelection;
+- (BOOL)textInputShouldEndEditing;
+- (void)textInputDidEndEditing;
 
 @end

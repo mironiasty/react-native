@@ -9,12 +9,21 @@
  * @flow
  */
 
+/* $FlowFixMe(>=0.54.0 site=react_native_oss) This comment suppresses an error
+ * found when Flow v0.54 was deployed. To see the error delete this comment and
+ * run Flow. */
 const log = require('npmlog');
 const path = require('path');
-const uniq = require('lodash').uniq;
+const uniqBy = require('lodash').uniqBy;
 const flatten = require('lodash').flatten;
+/* $FlowFixMe(>=0.54.0 site=react_native_oss) This comment suppresses an error
+ * found when Flow v0.54 was deployed. To see the error delete this comment and
+ * run Flow. */
 const chalk = require('chalk');
 
+/* $FlowFixMe(>=0.54.0 site=react_native_oss) This comment suppresses an error
+ * found when Flow v0.54 was deployed. To see the error delete this comment and
+ * run Flow. */
 const isEmpty = require('lodash').isEmpty;
 const promiseWaterfall = require('./promiseWaterfall');
 const registerDependencyAndroid = require('./android/registerNativeModule');
@@ -32,12 +41,13 @@ const getDependencyConfig = require('./getDependencyConfig');
 const pollParams = require('./pollParams');
 const commandStub = require('./commandStub');
 const promisify = require('./promisify');
+const findReactNativeScripts = require('../util/findReactNativeScripts');
 
 import type {RNConfig} from '../core';
 
 log.heading = 'rnpm-link';
 
-const dedupeAssets = (assets) => uniq(assets, asset => path.basename(asset));
+const dedupeAssets = (assets) => uniqBy(assets, asset => path.basename(asset));
 
 
 const linkDependencyAndroid = (androidProject, dependency) => {
@@ -151,8 +161,18 @@ function link(argv: Array<string>, config: RNConfig, args) {
     );
     return Promise.reject(err);
   }
- 
-  let packageName = argv[0];
+
+  if (!project.android && !project.ios && !project.windows && findReactNativeScripts()) {
+    throw new Error(
+      '`react-native link` can not be used in Create React Native App projects. ' +
+      'If you need to include a library that relies on custom native code, ' +
+      'you might have to eject first. ' +
+      'See https://github.com/react-community/create-react-native-app/blob/master/EJECTING.md ' +
+      'for more information.'
+    );
+  }
+
+  let packageName = args[0];
   // Check if install package by specific version (eg. package@latest)
   if (packageName !== undefined) {
     packageName = packageName.split('@')[0];

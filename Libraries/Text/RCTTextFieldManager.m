@@ -35,11 +35,16 @@ RCT_EXPORT_MODULE()
 
 #pragma mark - Unified <TextInput> properties
 
+RCT_REMAP_VIEW_PROPERTY(allowFontScaling, fontAttributes.allowFontScaling, BOOL)
 RCT_REMAP_VIEW_PROPERTY(autoCapitalize, backedTextInputView.autocapitalizationType, UITextAutocapitalizationType)
 RCT_REMAP_VIEW_PROPERTY(autoCorrect, backedTextInputView.autocorrectionType, UITextAutocorrectionType)
 RCT_REMAP_VIEW_PROPERTY(color, backedTextInputView.textColor, UIColor)
 RCT_REMAP_VIEW_PROPERTY(editable, backedTextInputView.editable, BOOL)
 RCT_REMAP_VIEW_PROPERTY(enablesReturnKeyAutomatically, backedTextInputView.enablesReturnKeyAutomatically, BOOL)
+RCT_REMAP_VIEW_PROPERTY(fontSize, fontAttributes.fontSize, NSNumber)
+RCT_REMAP_VIEW_PROPERTY(fontWeight, fontAttributes.fontWeight, NSString)
+RCT_REMAP_VIEW_PROPERTY(fontStyle, fontAttributes.fontStyle, NSString)
+RCT_REMAP_VIEW_PROPERTY(fontFamily, fontAttributes.fontFamily, NSString)
 RCT_REMAP_VIEW_PROPERTY(keyboardAppearance, backedTextInputView.keyboardAppearance, UIKeyboardAppearance)
 RCT_REMAP_VIEW_PROPERTY(keyboardType, backedTextInputView.keyboardType, UIKeyboardType)
 RCT_REMAP_VIEW_PROPERTY(placeholder, backedTextInputView.placeholder, NSString)
@@ -49,34 +54,19 @@ RCT_REMAP_VIEW_PROPERTY(secureTextEntry, backedTextInputView.secureTextEntry, BO
 RCT_REMAP_VIEW_PROPERTY(selectionColor, backedTextInputView.tintColor, UIColor)
 RCT_REMAP_VIEW_PROPERTY(spellCheck, backedTextInputView.spellCheckingType, UITextSpellCheckingType)
 RCT_REMAP_VIEW_PROPERTY(textAlign, backedTextInputView.textAlignment, NSTextAlignment)
+RCT_EXPORT_VIEW_PROPERTY(blurOnSubmit, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(clearTextOnFocus, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(maxLength, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(selectTextOnFocus, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(selection, RCTTextSelection)
+RCT_EXPORT_VIEW_PROPERTY(text, NSString)
 
 #pragma mark - Singleline <TextInput> (aka TextField) specific properties
 
-RCT_REMAP_VIEW_PROPERTY(caretHidden, textField.caretHidden, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(selection, RCTTextSelection)
-RCT_EXPORT_VIEW_PROPERTY(text, NSString)
-RCT_EXPORT_VIEW_PROPERTY(maxLength, NSNumber)
-RCT_REMAP_VIEW_PROPERTY(clearButtonMode, textField.clearButtonMode, UITextFieldViewMode)
-RCT_REMAP_VIEW_PROPERTY(clearTextOnFocus, textField.clearsOnBeginEditing, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(selectTextOnFocus, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(blurOnSubmit, BOOL)
+RCT_REMAP_VIEW_PROPERTY(caretHidden, backedTextInputView.caretHidden, BOOL)
+RCT_REMAP_VIEW_PROPERTY(clearButtonMode, backedTextInputView.clearButtonMode, UITextFieldViewMode)
 RCT_EXPORT_VIEW_PROPERTY(onSelectionChange, RCTDirectEventBlock)
-RCT_CUSTOM_VIEW_PROPERTY(fontSize, NSNumber, RCTTextField)
-{
-  view.textField.font = [RCTFont updateFont:view.textField.font withSize:json ?: @(defaultView.textField.font.pointSize)];
-}
-RCT_CUSTOM_VIEW_PROPERTY(fontWeight, NSString, __unused RCTTextField)
-{
-  view.textField.font = [RCTFont updateFont:view.textField.font withWeight:json]; // defaults to normal
-}
-RCT_CUSTOM_VIEW_PROPERTY(fontStyle, NSString, __unused RCTTextField)
-{
-  view.textField.font = [RCTFont updateFont:view.textField.font withStyle:json]; // defaults to normal
-}
-RCT_CUSTOM_VIEW_PROPERTY(fontFamily, NSString, RCTTextField)
-{
-  view.textField.font = [RCTFont updateFont:view.textField.font withFamily:json ?: defaultView.textField.font.familyName];
-}
+
 RCT_EXPORT_VIEW_PROPERTY(mostRecentEventCount, NSInteger)
 
 - (RCTViewManagerUIBlock)uiBlockToAmendWithShadowView:(RCTShadowView *)shadowView
